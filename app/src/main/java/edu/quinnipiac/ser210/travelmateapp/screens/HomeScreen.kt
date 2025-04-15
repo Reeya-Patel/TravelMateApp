@@ -20,21 +20,6 @@ fun HomeScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { navController.navigate(Screens.BrowseCountriesScreen.name) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
-            shape = MaterialTheme.shapes.large
-        ) {
-            Text(
-                text = "Browse Countries",
-                fontSize = 30.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
             onClick = { navController.navigate(Screens.PlanningScreen.name) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -43,6 +28,22 @@ fun HomeScreen(navController: NavController) {
         ) {
             Text(
                 text = "Plan Your Trip",
+                fontSize = 30.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+
+        Button(
+            onClick = { navController.navigate(Screens.BrowseCountriesScreen.name) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text(
+                text = "Browse Countries",
                 fontSize = 30.sp
             )
         }
