@@ -5,41 +5,43 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import edu.quinnipiac.ser210.travelmateapp.navigation.Screens
 
-val countries = listOf("Japan", "France", "Brazil", "Canada", "India")
-
 @Composable
-fun BrowseCountriesScreen(navController: NavController) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
-    ) {
-        Text(
-            text = "Select a country:",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
+fun BrowseCountriesScreen(navController: NavController, viewModel: TravelViewModel = viewModel()) {
+    LaunchedEffect(Unit) {
+        viewModel.loadVacationData()
+    }
 
-        LazyColumn {
-            items(countries) { country ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .clickable {
-                            navController.navigate(Screens.CountryDetailsScreen.name + "/$country")
-                        }
-                ) {
-                    Text(
-                        text = country,
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+    when {
+        viewModel.isLoading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        viewModel.error != null -> Text("Error: ${viewModel.error}")
+        else -> {
+            val countries = viewModel.vacationMap.keys.sorted()
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
+                items(countries) { country ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .clickable {
+                                navController.navigate(Screens.CountryDetailsScreen.name + "/$country")
+                            }
+                    ) {
+                        Text(
+                            text = country,
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
             }
         }
